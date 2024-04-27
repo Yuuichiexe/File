@@ -6,6 +6,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 API_HASH = os.environ['API_HASH']
 APP_ID = int(os.environ['APP_ID'])
 BOT_TOKEN = os.environ['BOT_TOKEN']
+UPDATE_CHANNEL = os.environ['UPDATE_CHANNEL']
 TRACK_CHANNEL = int(os.environ['TRACK_CHANNEL'])
 OWNER_ID = os.environ['OWNER_ID']
 
@@ -26,6 +27,29 @@ with xbot:
     print("Bot started!")
     xbot.send_message(int(OWNER_ID), "Bot started!")
 
+
+@xbot.on_message(filters.private & filters.incoming)
+async def forcesub(c, m):
+    if UPDATE_CHANNEL:
+        try:
+            user = await c.get_chat_member(UPDATE_CHANNEL, m.from_user.id)
+            if user.status == "kicked":
+                await m.reply_text("**You are banned in our channel. Contact Admin 😜**", quote=True)
+                return
+        except UserNotParticipant:
+            buttons = [[InlineKeyboardButton(text='Join Channel 🔖', url=f"https://t.me/{UPDATE_CHANNEL}")]]
+            await m.reply_text(
+                f"Hey {m.from_user.mention(style='md')} you need to join my updates channel in order to use me 😉\n\n"
+                "__Press the following button to join now 👇__",
+                reply_markup=InlineKeyboardMarkup(buttons),
+                quote=True
+            )
+            return
+        except Exception as e:
+            print(e)
+            await m.reply_text(f"Something went wrong. Please try again later or contact the owner.", quote=True)
+            return
+    await m.continue_propagation()
 
 # Start & Get file
 @xbot.on_message(filters.command('start') & filters.private)
