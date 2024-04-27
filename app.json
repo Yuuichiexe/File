@@ -27,9 +27,12 @@
       "description": "Create new private/public channel and get it's id, startswith -100",
       "value": ""
     },
+    "UPDATE_CHANNEL": {
+      "description": "Enter the username of your channel without @ or http link",
+      "value": ""
     "OWNER_ID": {
       "description": "If all: will working for all users (storing files) or fill with your telegram id so that only you can store the files.",
-      "value": "all"
+      "value": ""
     }
   },
   "addons": [
